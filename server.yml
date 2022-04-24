@@ -1,0 +1,13 @@
+---
+- hosts: server
+  become: true
+  roles:
+    #- selinux
+    #- chrony
+    #- useradd
+    #- vim
+    #- postgresql
+    #- zabbix-agent
+    #- firewalld
+    #- python
+    #- lies

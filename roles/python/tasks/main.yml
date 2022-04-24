@@ -1,0 +1,13 @@
+---
+- name: install python
+  yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - python36u
+    - python36u-devel
+    - python36u-libs
+    - python36u-pip
+    - python36u-psycopg2
+

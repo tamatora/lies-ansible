@@ -1,0 +1,61 @@
+# coding:utf-8
+
+import parameter as var
+import datetime as dt
+import logging
+import logging.handlers
+import time
+import psycopg2
+import csv
+import os
+import glob
+import sys
+
+# log設定(コンソール出力なし)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+fh = logging.handlers.RotatingFileHandler(filename=var.logFile, maxBytes=var.maxBytes,
+                                           backupCount=var.backupCount)
+formatter =logging.Formatter('%(asctime)s %(levelname)s %(name)s :%(message)s')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+try:
+  logger.info('処理が開始されました。')
+
+  # ファイルチェック
+  fileCh = glob.glob(var.fdir)
+
+  if not fileCh:
+    logger.info('処理対象がないため終了')
+    sys.exit()
+
+  else:
+    # ファイル読み込み
+    for file in fileCh:
+      logger.info(file)
+      f = open(file, mode='r', encoding='utf-8')
+
+      reader = csv.reader(f)
+      header = next(reader)
+
+      # Postgresqlへの接続
+      conn = psycopg2.connect(dbname=var.dbname, user=var.user, host=var.host,\
+                                password=var.password)
+      cur = conn.cursor()
+      conn.set_isolation_level(0)
+
+      # copy
+      cur.copy_from( f , var.table, sep=',', null='\\N')
+      conn.commit()
+      f.close()
+
+      # ファイル削除
+      os.remove(file)
+
+    logger.info('処理を終了します。')
+
+except Exception as e:
+  logger.error(e)
+

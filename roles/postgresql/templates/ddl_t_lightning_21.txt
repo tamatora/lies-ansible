@@ -1,0 +1,35 @@
+-- Project Name : lies_table
+-- Date/Time    : 2021/03/31 8:31:18
+-- Author       : MasahiroTatesawa
+-- RDBMS Type   : PostgreSQL
+-- Application  : A5:SQL Mk-2
+
+/*
+  BackupToTempTable, RestoreFromTempTable疑似命令が付加されています。
+  これにより、drop table, create table 後もデータが残ります。
+  この機能は一時的に $$TableName のような一時テーブルを作成します。
+*/
+
+-- 落雷情報_FY21
+--* RestoreFromTempTable
+create table T_LIGHTNING_21 (
+  lightning_time timestamp not null
+  , longtitude numeric(6,4) not null
+  , latitude numeric(7,4) not null
+  , "current(kA)" numeric(5,1) not null
+  , cloudindex boolean not null
+) ;
+
+create index "落雷情報"
+  on T_LIGHTNING_21(lightning_time);
+
+create index T_LIGHTNING_21_IX1
+  on T_LIGHTNING_21(longtitude,latitude);
+
+comment on table T_LIGHTNING_21 is '落雷情報_FY21';
+comment on column T_LIGHTNING_21.lightning_time is '落雷日時';
+comment on column T_LIGHTNING_21.longtitude is '緯度';
+comment on column T_LIGHTNING_21.latitude is '経度';
+comment on column T_LIGHTNING_21."current(kA)" is '電流値';
+comment on column T_LIGHTNING_21.cloudindex is '雲放電';
+

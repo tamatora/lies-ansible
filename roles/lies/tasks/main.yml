@@ -1,0 +1,51 @@
+---
+- name: create directory lies
+  file:
+    path: "{{ lies_home }}"
+    state: directory
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: 0775
+
+- name: create directory data
+  file:
+    path: "{{ lies_home }}/data"
+    state: directory
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: 0775
+
+- name: create directory script
+  file:
+    path: "{{ lies_home }}/script"
+    state: directory
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: 0775
+
+- name: create directory log
+  file:
+    path: "{{ lies_home }}/log"
+    state: directory
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: 0775
+
+- name: set main.py
+  template:
+    src: "main.py.j2"
+    dest: "{{ lies_home }}/script/main.py"
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: "0664"
+    backup: yes
+
+- name: set parameter.py
+  template:
+    src: "parameter.py.j2"
+    dest: "{{ lies_home }}/script/parameter.py"
+    owner: "{{ setup_user }}"
+    group: "{{ setup_user }}"
+    mode: "0664"
+    backup: yes
+

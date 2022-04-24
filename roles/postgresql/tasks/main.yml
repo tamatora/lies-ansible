@@ -1,0 +1,50 @@
+---
+- name: install postgresql
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql-9.2.24
+    - postgresql-libs-9.2.24
+    - postgresql-server-9.2.24
+
+- name: create db-cluster
+  shell: "/bin/postgresql-setup initdb"
+  environment:
+    PGSETUP_INITDB_OPTIONS: "-D /var/lib/pgsql/data --encoding=UTF-8 --no-locale"
+  args:
+    creates: "/var/lib/pgsql/data/PG_VERSION"
+
+- name: create log directory
+  file:
+    path: "/var/log/pgsql"
+    state: "directory"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0755"
+
+- name: set postgresql.conf
+  template:
+    src: "postgresql.conf.j2"
+    dest: "/var/lib/pgsql/data/postgresql.conf"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0600"
+    backup: yes
+  notify: "restart_postgresql"
+
+- name: set pg_hba.conf
+  template:
+    src: "pg_hba.conf.j2"
+    dest: "/var/lib/pgsql/data/pg_hba.conf"
+    owner: "postgres"
+    group: "postgres"
+    mode: "0600"
+    backup: yes
+  notify: "restart_postgresql"
+
+- name: service start
+  service:
+    name: postgresql
+    enabled: yes
+    state: started

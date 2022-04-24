@@ -1,0 +1,18 @@
+# 設定用ユーザ情報
+setup_user: setupuser
+
+# vim用変数
+vimrc_path: /home/setupuser/.vimrc
+
+# chrony用変数
+chrony_ip: 192.168.240.53
+
+# prosgresql用変数
+postgre_port: 5432
+postgre_connection: 100
+postgre_buffers: 256MB
+postgre_mem: 16MB
+postgre_maintenance_mem: 64MB
+
+# LIES用変数
+lies_home: /home/setupuser/lies

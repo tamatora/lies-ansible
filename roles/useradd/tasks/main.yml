@@ -1,0 +1,5 @@
+---
+- name: useradd procuser
+  user:
+    name: procuser
+    password: "{{ 'procuser009' | password_hash('sha512') }}"
